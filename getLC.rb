@@ -62,7 +62,7 @@ def getLC(lcName, region, credentials)
          ebs[:volume_size] = bdm.ebs.volume_size
       end
       if (bdm.ebs.volume_type)
-         ebs[:volume_type] = bdm.edm.volume_type
+         ebs[:volume_type] = bdm.ebs.volume_type
       end
       if (bdm.ebs.delete_on_termination)
          ebs[:delete_on_termination] = bdm.ebs.delete_on_termination
@@ -70,8 +70,8 @@ def getLC(lcName, region, credentials)
       if (bdm.ebs.iops)
          ebs[:iops] = bdm.ebs.iops
       end
-      if (bdm.ebs.encryped)
-         ebs[:encrypted] = bdm.ebs.encryped
+      if (bdm.ebs.encrypted)
+         ebs[:encrypted] = bdm.ebs.encrypted
       end
       nb[:ebs] = ebs
       opt[:block_device_mappings].push(nb)
