@@ -73,10 +73,9 @@ def getLC(lcName, region, credentials)
       if (bdm.ebs.encryped)
          ebs[:encrypted] = bdm.ebs.encryped
       end
+      nb[:ebs] = ebs
+      opt[:block_device_mappings].push(nb)
    }
-   if (lc.block_device_mappings )
-      opt[:block_device_mappings] = lc.block_device_mappings
-   end
    opt[:instance_monitoring] = {enabled: false}
    if (lc.instance_monitoring.enabled )
       opt[:instance_monitoring][:enabled] = true
