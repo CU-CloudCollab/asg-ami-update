@@ -16,7 +16,8 @@ def getLC(lcName, region, credentials)
       launch_configuration_names: [lcName]})
    lc = lcd.launch_configurations[0]
 
-   opt = {launch_configuration_name: lcName}
+   opt = {launch_configuration_name: lcName,
+          block_device_mappings: []}
    if (lc.image_id)
       opt[:image_id] = lc.image_id
    end
@@ -44,6 +45,35 @@ def getLC(lcName, region, credentials)
    if (lc.ramdisk_id )
       opt[:ramdisk_id] = lc.ramdisk_id
    end
+   lc.block_device_mappings.each { 
+      |bdm|
+      nb = {device_name: bdm.device_name, no_device: false }
+      ebs = {delete_on_termination: false, encrypted: false}
+      if (bdm.virtual_name)
+         nb[:virtual_name] = bdm.virtual_name
+      end
+      if (bdm.no_device)
+         nb[:no_device] = true
+      end 
+      if (bdm.ebs.snapshot_id)
+         ebs[:snapshot_id] = bdm.ebs.snapshot_id
+      end
+      if (bdm.ebs.volume_size)
+         ebs[:volume_size] = bdm.ebs.volume_size
+      end
+      if (bdm.ebs.volume_type)
+         ebs[:volume_type] = bdm.edm.volume_type
+      end
+      if (bdm.ebs.delete_on_termination)
+         ebs[:delete_on_termination] = bdm.ebs.delete_on_termination
+      end
+      if (bdm.ebs.iops)
+         ebs[:iops] = bdm.ebs.iops
+      end
+      if (bdm.ebs.encryped)
+         ebs[:encrypted] = bdm.ebs.encryped
+      end
+   }
    if (lc.block_device_mappings )
       opt[:block_device_mappings] = lc.block_device_mappings
    end
