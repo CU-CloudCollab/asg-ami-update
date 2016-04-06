@@ -4,8 +4,13 @@ require 'aws-sdk'
 require 'uuid'
 require 'optparse'
 
-def get_ami_by_image_id(image_id, region, credentials)
+# Get an AMI image description for a given id
+# @param image_id [String] AMI Image ID
+# @param region [String] AWS Region where this image lives
+# @param credentials [AWS::SharedCredentials] Credential object
 
+
+def get_ami_by_image_id(image_id, region, credentials)
     ec2 = Aws::EC2::Client.new(
         region: region,
         credentials: credentials)
@@ -16,7 +21,9 @@ def get_ami_by_image_id(image_id, region, credentials)
     ec2_image_description
 end
 
+
 # given an autoscaling, return the launch configuration name
+# @param asg [
 def get_launch_config_name(asg)
     asg.launch_configuration_name
 end
@@ -66,6 +73,12 @@ def get_launch_config_hash(lcName, region, credentials)
     opt[:placement_tenancy] = lc.placement_tenancy if lc.placement_tenancy
 
     opt
+end
+
+def update_launch_config_ami(lc_hash,ami)
+  lc_hash[:image_id] = ami
+
+  lc_hash
 end
 
 # given a group name, return the scaling group
@@ -146,7 +159,8 @@ if options_defined
 
 	asg = get_asg_by_name(options[:asg], region, credentials)
 	existing_lc_name = get_launch_config_name(asg)
-	new_lc_config_hash = get_launch_config_hash(existing_lc_name, region, credentials)
+	lc_config_hash = get_launch_config_hash(existing_lc_name, region, credentials)
+  new_lc_config_hash = update_launch_config_ami(lc_config_hash,options[:ami])
 	new_lc_name = create_launch_config_by_hash(new_lc_config_hash, region, credentials)
 	puts new_lc_name + " created"
 	update_asg_launch_config(options[:asg],new_lc_name, region, credentials)
