@@ -7,12 +7,13 @@ require 'optparse'
 
 def get_ami_by_image_id(image_id, region, credentials)
   ec2 = Aws::EC2::Client.new(
-  region: region,
-  credentials: credentials)
+      region: region,
+      credentials: credentials)
 
   # pull the ami description based on image id
   ec2_image_description = ec2.describe_image_attribute(image_id: image_id,
-  attribute: 'description')
+      attribute: 'description')
+
   ec2_image_description
 end
 
@@ -24,7 +25,7 @@ end
 # given a launch configuration (LC) name, get the LC options
 def get_launch_config_hash(lcName, region, credentials)
   cli = Aws::AutoScaling::Client.new(region: region,
-  credentials: credentials)
+      credentials: credentials)
 
   lcd = cli.describe_launch_configurations(launch_configuration_names: [lcName])
   lc = lcd.launch_configurations[0]
@@ -77,7 +78,7 @@ def get_launch_config_hash(lcName, region, credentials)
   # given a group name, return the scaling group
   def get_asg_by_name(groupName, region, credentials)
     cli = Aws::AutoScaling::Client.new(region: region,
-    credentials: credentials)
+        credentials: credentials)
 
     asg_desc = cli.describe_auto_scaling_groups(auto_scaling_group_names: [groupName])
     asg = asg_desc.auto_scaling_groups[0]
@@ -89,7 +90,7 @@ def get_launch_config_hash(lcName, region, credentials)
   def create_launch_config_by_hash(lc_hash = {}, region, credentials)
     # Get autoscale client
     asg = Aws::AutoScaling::Client.new(region: region,
-    credentials: credentials)
+        credentials: credentials)
 
     # LC needs a new name
     uuid = UUID.new
@@ -103,10 +104,10 @@ def get_launch_config_hash(lcName, region, credentials)
 
   def update_asg_launch_config(asg_name, lc_name, region, credentials)
     asg_client = Aws::AutoScaling::Client.new(credentials: credentials,
-    region: region)
+        region: region)
 
     update_asg = asg_client.update_auto_scaling_group(auto_scaling_group_name: asg_name,
-    launch_configuration_name: lc_name)
+        launch_configuration_name: lc_name)
   end
 
   # example
