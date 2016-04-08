@@ -9,12 +9,19 @@ This initial proof of concept was developed at the 4/5/2016 AWS Hackathon by tea
 
 ## Use
 
+First, modify update_asg_ami.rb lines 115-116 to reflect your credential profile and aws region.
+
+Next, from command line:
+
 `update_asg_ami.rb -g [existing scaling group] -i [desired AMI image id]`
 
+You should see a note with the new launch configuration name as well and a note that the ASG update was successful.
 
 ## Todo/Next Steps
 
 Better validation of specified scaling group and ami (do they exist, do we have access to launch)
+
+Add error handling
 
 Refactor into the cucloud ruby spec/library
 
